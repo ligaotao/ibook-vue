@@ -3,7 +3,7 @@
     <router-link to="/">发现</router-link> |
     <router-link to="/search_book" tag="div">搜索</router-link>
     |
-    <router-link to="/history" tag="div">书架</router-link>
+    <router-link to="/book_shelf" tag="div">书架</router-link>
   </div>
   <router-view v-slot={Component}>
     <keep-alive exclude="ReadBook"><component :is="Component" /></keep-alive>

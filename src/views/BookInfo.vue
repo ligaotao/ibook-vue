@@ -1,5 +1,12 @@
 <template>
   <div class="book-info">
+      <NavBar
+        :title="state.name"
+        left-arrow
+        @click-left="router.go(-1)"
+        :fixed="true"
+        :placeholder="true"
+      />
     <div class="book-info-img">
       <Image :src="state.img" width="190" height="270" />
     </div>
@@ -28,7 +35,7 @@
 import { reactive, onActivated } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { BookState } from "@/state";
-import { Tab, Tabs, Image, Button } from "vant";
+import { Tab, Tabs, Image, Button, NavBar } from "vant";
 import { bookInfo } from "@/api";
 import VirtualList from "@/components/vue-virtual-scroll-list/index";
 import {Routes} from '@/state'
@@ -43,6 +50,7 @@ export default {
     Image,
     Button,
     VirtualList,
+    NavBar
   },
   setup() {
     const route = useRoute();
@@ -110,7 +118,8 @@ export default {
       Item,
       init,
       isLike,
-      pushHistory
+      pushHistory,
+      router
     };
   },
 };
