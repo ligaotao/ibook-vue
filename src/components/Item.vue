@@ -2,7 +2,7 @@
   <div class="chapter-info" :class="index === active ? 'chapter-info-active': ''">
     <div><Icon name="location-o" v-if="index === active" /></div>
     
-    <span>{{ source.name }}</span>
+    <span>{{index}} - {{active}} - {{ source.name }}</span>
   </div>
 </template>
 

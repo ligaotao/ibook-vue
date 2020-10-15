@@ -12,7 +12,7 @@
     </div>
 
     <Tabs v-model:active="state.active" class="book-info-content">
-      <Tab title="简介" class="book-introduce">{{ state.introduce }}</Tab>
+      <Tab title="简介" class="book-chapter-introduce">{{ state.introduce }}</Tab>
       <Tab title="章节目录" class="book-chapter-box">
         <VirtualList
           style="height: 100%; overflow-y: auto"
@@ -157,14 +157,16 @@ export default {
 .book-info-img {
   border-bottom: 1px solid #ccc;
 }
-.book-introduce {
-  padding: 20px;
-  text-align: left;
-}
 .book-action {
   display: flex;
 }
 .book-action .book-action-button {
   flex: 1;
+}
+.book-chapter-introduce {
+  padding: 20px;
+  text-align: left;
+  line-height: 24px;
+  font-size: 14px;
 }
 </style>

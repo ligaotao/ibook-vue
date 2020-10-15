@@ -39,4 +39,7 @@ body {
   font-weight: bold;
   color: @title-color-active;
 }
+.van-nav-bar i.van-icon {
+  color: @title-color-active
+}
 </style>

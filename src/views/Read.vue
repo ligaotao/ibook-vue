@@ -18,7 +18,7 @@
     <div class="read-content" @click="actionShow = !actionShow">
       <List
         v-model:loading="loading"
-        @load="load"
+        @load="loadMore"
         :offset="100"
         loading-text="加载中..."
         class="read-content-box"
@@ -140,12 +140,30 @@ export default {
 
     chapter.value = activeBook.chapter;
     index.value = activeBook.activeChapterIndex;
+
     activeChapterIndex.value = activeBook.activeChapterIndex;
 
-    const load = async function () {
-      activeChapterIndex.value = index.value;
+    const activeOrderChapterIndex = computed(() => {
+      // 倒序后调整 激活的索引值
+      let index = order.value
+        ? chapter.value.length - 1 - activeChapterIndex.value
+        : activeChapterIndex.value;
+      return index;
+    });
 
-      let url = chapter.value[index.value].url;
+    const nextChapter = function () {
+      let next = 0
+      if (order.value) {
+        next = activeChapterIndex.value +1
+      } else {
+        next = activeChapterIndex.value -1
+      }
+      return next
+    }
+
+    const load = async function () {
+      
+      let url = chapter.value[activeOrderChapterIndex.value].url;
 
       let result = await chapterInfo({ chapter_url: url, book_source_id: 22 });
 
@@ -154,7 +172,6 @@ export default {
       contents.value.push(result.data.result);
 
       loading.value = false;
-      index.value += 1;
     };
 
     const changeOrder = function () {
@@ -167,14 +184,6 @@ export default {
       return order.value ? "正序" : "倒序";
     });
 
-    const activeOrderChapterIndex = computed(() => {
-      // 倒序后调整 激活的索引值
-      let index = order.value
-        ? chapter.value.length - 1 - activeChapterIndex.value
-        : activeChapterIndex.value;
-      return index;
-    });
-
     const actionTab = function (active) {
       if (active == "a") {
         show.value = true;
@@ -183,10 +192,17 @@ export default {
     };
     const goToChapter = function (i) {
       contents.value = [];
-      index.value = i;
+      activeChapterIndex.value = order.value ? chapter.value.length - 1 - i  : i;
+
       load();
+
       show.value = false;
     };
+    const loadMore = function () {
+      let page = nextChapter()
+      activeChapterIndex.value = page;
+      load()
+    }
     const pushHistory = function () {
       if (isLike.value) {
         Dialog.confirm({
@@ -211,7 +227,7 @@ export default {
       index,
       loading,
       contents,
-      load,
+      loadMore,
       Item,
       changeOrder,
       catalogLen,

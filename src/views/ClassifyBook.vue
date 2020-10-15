@@ -123,8 +123,4 @@ export default {
   padding: 0;
   margin: 0;
 }
-
-.van-nav-bar .van-icon {
-  color: @title-color-active
-}
 </style>
