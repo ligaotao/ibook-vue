@@ -20,6 +20,7 @@
         v-model:loading="loading"
         @load="loadMore"
         :offset="100"
+        :immediate-check="false"
         loading-text="加载中..."
         class="read-content-box"
       >
@@ -36,6 +37,7 @@
       </List>
     </div>
     <div class="read-action" v-show="actionShow">
+
       <Tabs
         v-model:active="active"
         class="tab-reseve"
@@ -72,7 +74,20 @@
           </template>
         </Tab>
         <Tab title="字体" name="b">
-          <div class="read-bottom-action">
+          <template #title
+            ><Icon class-prefix="icon" name="ziti" size="24" />
+          </template>
+        </Tab>
+        <Tab title="进度" name="c">
+          <div class="read-bottom-action"></div>
+          <template #title>
+            <Icon class-prefix="icon" name="xiaoshuo" size="24" />
+          </template>
+        </Tab>
+      </Tabs>
+      <div class="font-change-model">
+        <div class="read-bottom-action">
+            <span class="read-bottom-action-name">字号</span>
             <span class="read-font-small">A-</span>
             <Slider
               v-model="fontSize"
@@ -87,17 +102,15 @@
             </Slider>
             <span class="read-font-big">A+</span>
           </div>
-          <template #title
-            ><Icon class-prefix="icon" name="ziti" size="24" />
-          </template>
-        </Tab>
-        <Tab title="进度" name="c">
-          <div class="read-bottom-action"></div>
-          <template #title>
-            <Icon class-prefix="icon" name="xiaoshuo" size="24" />
-          </template>
-        </Tab>
-      </Tabs>
+          <div class="read-bottom-action">
+            <span class="read-bottom-action-name">行高</span>
+            <ul class="line-height-list">
+              <li v-for="item in lineHeightList" :key="item">
+                <Icon class-prefix="icon" :name="item" size="20" :class="item==lineHeight? 'active-icon': ''" />
+              </li>
+            </ul>
+          </div>
+      </div>
     </div>
   </div>
 </template>
@@ -109,7 +122,7 @@ import { Popup, List, Cell, Tabs, Tab, Slider, Icon, Dialog, Notify } from "vant
 import VirtualList from "@/components/vue-virtual-scroll-list/index";
 import Item from "@/components/Item";
 import { chapterInfo } from "@/api";
-import { addHistory, isInHistory, removeHistory } from "@/api/book";
+import { addHistory, isInHistory, removeHistory, updateBookInfo } from "@/api/book";
 
 export default {
   name: 'ReadBook',
@@ -129,11 +142,15 @@ export default {
     let index = ref(0);
     let loading = ref(false);
     let contents = ref([]);
-    let order = ref(false);
+    let order = ref(true);
     let fontSize = ref(14);
+    let lineHeight = ref("lineheightl")
     let active = ref("c");
     let actionShow = ref(false);
     let activeChapterIndex = ref(0);
+    let lineHeightList = [
+      'lineheightm', 'lineheightl', 'lineheightx'
+    ]
     // 初始化书籍信息
     const activeBook = JSON.parse(JSON.stringify(BookState.state.activeBook));
     let isLike = ref(isInHistory(activeBook));
@@ -145,7 +162,7 @@ export default {
 
     const activeOrderChapterIndex = computed(() => {
       // 倒序后调整 激活的索引值
-      let index = order.value
+      let index = !order.value
         ? chapter.value.length - 1 - activeChapterIndex.value
         : activeChapterIndex.value;
       return index;
@@ -154,9 +171,9 @@ export default {
     const nextChapter = function () {
       let next = 0
       if (order.value) {
-        next = activeChapterIndex.value +1
+        next = activeChapterIndex.value - 1
       } else {
-        next = activeChapterIndex.value -1
+        next = activeChapterIndex.value + 1
       }
       return next
     }
@@ -166,14 +183,18 @@ export default {
       let url = chapter.value[activeOrderChapterIndex.value].url;
 
       let result = await chapterInfo({ chapter_url: url, book_source_id: 22 });
+      
+      console.log(activeChapterIndex.value)
 
-      BookState.setState(["activeBook", "activeChapterIndex"], index.value);
+      updateBookInfo("activeBook", {activeChapterIndex: activeChapterIndex.value})
 
       contents.value.push(result.data.result);
 
       loading.value = false;
     };
-
+    // 初始化的时候 调用请求章节
+    load();
+    
     const changeOrder = function () {
       order.value = !order.value;
       chapter.value.reverse();
@@ -221,6 +242,9 @@ export default {
       }
 
     };
+    const changeLineHeight = function (value) {
+      lineHeight.value = value
+    }
     return {
       chapter,
       show,
@@ -240,6 +264,9 @@ export default {
       pushHistory,
       activeOrderChapterIndex,
       isLike,
+      lineHeight,
+      lineHeightList,
+      changeLineHeight
     };
   },
 };
@@ -342,15 +369,34 @@ export default {
   height: 40px;
   display: flex;
   align-items: center;
+  padding: 0 20px;
 }
 .read-bottom-action .read-font-small,
 .read-bottom-action .read-font-big {
-  width: 80px;
+  padding: 0 10px;
 }
 .font-process {
   flex: 1;
 }
 .active-icon {
   color: @title-color-active;
+}
+.read-bottom-action-name {
+  width: 40px;
+  text-align: left;
+  font-size: 12px;
+}
+.font-change-model {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: #fff;
+}
+.line-height-list {
+  display: flex;
+  flex: 1;
+}
+.line-height-list li {
+  flex: 1;
 }
 </style>

@@ -1,26 +1,28 @@
 import { reactive } from 'vue'
 import routes from './routes'
-
+import {isObject} from '@/util'
 
 const createState = () => {
     const state = reactive({
         activeBook: {
+            name: "",
+            img: "",
+            author: "",
+            introduce: "",
             chapter: [],
-            bookName: '',
+            activeChapterIndex: 0,
             bookSourceId: 22,
-            bookUrl: '',
-            activeChapterIndex: 0
+            bookUrl: "",
+            bookName: ""
         },
         bookHistory: []
     }
     )
     const setState = (key, value) => {
-        if (Array.isArray(key)) {
-            let obj = state
-            key.forEach(k => {
-                obj = obj[k]
-            });
-            obj = value
+        if (isObject(value)) {
+            for (var k in value) {
+                state[key][k] = value[k]
+            }
         } else {
             state[key] = value
         }

@@ -26,3 +26,22 @@ export const addHistory = function (obj) {
     }
     return [flag, obj]
 }
+
+/**
+ * 用来将内存中的书籍信息 同步到历史数组中
+ * @param {*} key 一般为 activeBook
+ * @param {*} value 更新内容
+ */
+
+export const updateBookInfo = function (key, value) {
+    
+    BookState.setState(key, value)
+    const obj = BookState.state[key]
+
+    BookState.state.bookHistory.some(function(k, i) {
+        if (k.bookSourceId == obj.bookSourceId && k.bookUrl == obj.bookUrl) {
+            BookState.state.bookHistory[i] = obj
+        }
+        return k.bookSourceId == obj.bookSourceId && k.bookUrl == obj.bookUrl
+    })
+}

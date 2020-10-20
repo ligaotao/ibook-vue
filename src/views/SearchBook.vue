@@ -22,11 +22,15 @@ export default {
       }
       if (searchMain.value.length < 2) {
         Notify({ type: 'danger', message: '搜索字节最少为两个' })
+        return false
       }
 
       loading.value = true
       let result = await search(params);
-      bookList.value = bookList.value.concat(result.data.result) ;
+      bookList.value = result.data.result ;
+      if (result.data.result.length == 0) {
+        Notify({ type: 'primary', message: '未找到相关结果，请尝试更换其他关键词' })
+      }
       loading.value = false
     }
 

@@ -64,7 +64,7 @@ export default {
       author: "",
       introduce: "",
       chapter: [],
-      active: 1,
+      activeChapterIndex: 0,
       bookSourceId: 22,
       bookUrl: "",
       bookName: ""
@@ -86,13 +86,7 @@ export default {
     };
 
     const readBook = function () {
-      BookState.setState("activeBook", {
-        chapter: state.chapter,
-        bookName: state.name,
-        bookSourceId: 22,
-        bookUrl: route.query.url,
-        activeChapterIndex: 0
-      });
+      BookState.setState("activeBook", state);
       router.push({ name: "ReadBook" });
     };
     const init = function () {

@@ -12,7 +12,6 @@
 </template>
 
 <style lang="less">
-@import "../public/font/iconfont.css";
 body {
   margin: 0;
 }

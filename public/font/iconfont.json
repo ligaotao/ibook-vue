@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "931021",
+      "name": "行高-小",
+      "font_class": "lineheightm",
+      "unicode": "e6fd",
+      "unicode_decimal": 59133
+    },
+    {
+      "icon_id": "931022",
+      "name": "行高-正常",
+      "font_class": "lineheightl",
+      "unicode": "e6fe",
+      "unicode_decimal": 59134
+    },
+    {
+      "icon_id": "931023",
+      "name": "行高-大",
+      "font_class": "lineheightx",
+      "unicode": "e6ff",
+      "unicode_decimal": 59135
+    },
+    {
       "icon_id": "1735412",
       "name": "太阳",
       "font_class": "taiyang",
@@ -32,6 +53,13 @@
       "font_class": "ziti",
       "unicode": "e82e",
       "unicode_decimal": 59438
+    },
+    {
+      "icon_id": "10841247",
+      "name": "空",
+      "font_class": "kong",
+      "unicode": "ed15",
+      "unicode_decimal": 60693
     },
     {
       "icon_id": "11335993",

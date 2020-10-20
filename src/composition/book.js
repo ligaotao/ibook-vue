@@ -4,7 +4,7 @@ import { Dialog, Notify } from "vant";
 import { addHistory, isInHistory, removeHistory } from "@/api/book";
 
 export function bookHistory() {
-    const activeBook = ref({});
+    const activeBook = ref(null);
     let isLike = computed(() => {
         return isInHistory(activeBook.value)
     });
@@ -17,7 +17,6 @@ export function bookHistory() {
             })
                 .then(() => {
                     removeHistory(activeBook.value);
-                    activeBook.value = {}
                     Notify({ type: 'primary', message: '删除成功' });
                 })
         } else {
