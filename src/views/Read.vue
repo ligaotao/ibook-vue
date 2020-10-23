@@ -29,6 +29,7 @@
           :title="item"
           v-for="item in contents"
           :style="{ fontSize: fontSize + 'px' }"
+          :class="lineHeight"
         >
           <template #title>
             <div v-html="item"></div>
@@ -85,7 +86,7 @@
           </template>
         </Tab>
       </Tabs>
-      <div class="font-change-model">
+      <div class="font-change-model" v-show="fontShow">
         <div class="read-bottom-action">
             <span class="read-bottom-action-name">字号</span>
             <span class="read-font-small">A-</span>
@@ -105,7 +106,7 @@
           <div class="read-bottom-action">
             <span class="read-bottom-action-name">行高</span>
             <ul class="line-height-list">
-              <li v-for="item in lineHeightList" :key="item">
+              <li v-for="item in lineHeightList" :key="item" @click="lineHeight=item">
                 <Icon class-prefix="icon" :name="item" size="20" :class="item==lineHeight? 'active-icon': ''" />
               </li>
             </ul>
@@ -116,7 +117,7 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { BookState } from "@/state";
 import { Popup, List, Cell, Tabs, Tab, Slider, Icon, Dialog, Notify } from "vant";
 import VirtualList from "@/components/vue-virtual-scroll-list/index";
@@ -144,6 +145,7 @@ export default {
     let contents = ref([]);
     let order = ref(true);
     let fontSize = ref(14);
+    let fontShow = ref(false);
     let lineHeight = ref("lineheightl")
     let active = ref("c");
     let actionShow = ref(false);
@@ -209,6 +211,8 @@ export default {
       if (active == "a") {
         show.value = true;
         actionShow.value = false;
+      } else if (active == 'b') {
+        fontShow.value = true;
       }
     };
     const goToChapter = function (i) {
@@ -245,6 +249,12 @@ export default {
     const changeLineHeight = function (value) {
       lineHeight.value = value
     }
+
+    watch(actionShow, (actionShow) => {
+      if (actionShow == false) {
+        fontShow.value = false
+      }
+    })
     return {
       chapter,
       show,
@@ -266,7 +276,8 @@ export default {
       isLike,
       lineHeight,
       lineHeightList,
-      changeLineHeight
+      changeLineHeight,
+      fontShow
     };
   },
 };
@@ -391,6 +402,7 @@ export default {
   bottom: 0;
   width: 100%;
   background: #fff;
+  height: 100px;
 }
 .line-height-list {
   display: flex;
@@ -398,5 +410,14 @@ export default {
 }
 .line-height-list li {
   flex: 1;
+}
+.lineheightm {
+  line-height: 20px;
+}
+.lineheightl{
+  line-height: 24px;
+}
+.lineheightx {
+  line-height: 30px;
 }
 </style>
